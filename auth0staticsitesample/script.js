@@ -1,6 +1,6 @@
 'use strict';
 
-const APP_PATH = `/auth0staticsitesample`; // https://ユーザー名.github.io/<ココ> or ルートパス利用なら`/`だけでOK
+const APP_PATH = `/auth0staticsitesample`;
 let auth0 = null;
 const fetchAuthConfig = () => fetch("auth_config.json"); // auth_config.json読み込み
 
@@ -44,8 +44,9 @@ const updateUI = async () => {
   const isAuthenticated = await auth0.isAuthenticated();
 
   document.getElementById("btn-logout").disabled = !isAuthenticated;
+  //document.getElementById("btn-checkSession").disabled = !isAuthenticated;
   document.getElementById("btn-login").disabled = isAuthenticated;
-  
+
   // NEW - add logic to show/hide gated content after authentication
   if (isAuthenticated) {
     document.getElementById("gated-content").classList.remove("hidden");
@@ -77,4 +78,13 @@ const logout = () => {
   auth0.logout({
     returnTo: window.location.origin + APP_PATH
   });
+};
+
+const checkSession = async () => {
+  try {
+    const accessToken = await auth0.getTokenSilently();
+    console.log(accessToken);
+  } catch (error) {
+    console.log(error)
+  }
 };
